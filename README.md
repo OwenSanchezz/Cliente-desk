@@ -2,7 +2,7 @@
 
 Aplicación web para registrar y dar seguimiento a las solicitudes de clientes: captura de la solicitud, respuesta elaborada, estatus y agente responsable, con un reporte ejecutivo para consultar y exportar.
 
-Demo en vivo: https://owensanchezz.github.io/clientedesk/
+Demo en vivo: https://owensanchezz.github.io/Cliente-desk/
 
 ## Funciones
 
