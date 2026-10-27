@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!-- Autor: Owen Yamil Campuzano Sanchez (@owensanchezz) | Universidad ICEL, Ingeniería en Desarrollo de Software y Aplicaciones -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ClienteDesk — Sistema de Solicitudes</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">◈</span>
+        <span class="logo-text">ClienteDesk</span>
+      </div>
+      <nav class="header-nav">
+        <button class="nav-btn active" onclick="showSection('solicitudes')">Solicitudes</button>
+        <button class="nav-btn" onclick="showSection('reporte')">Reporte</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- SECCIÓN: SOLICITUDES -->
+  <main id="section-solicitudes" class="section active">
+    <div class="page-hero">
+      <div class="hero-eyebrow">Sistema de Gestión</div>
+      <h1 class="hero-title">Respuesta a <em>Solicitudes</em></h1>
+      <p class="hero-sub">Gestiona y responde las solicitudes de tus clientes de forma eficiente y organizada.</p>
+    </div>
+
+    <div class="container">
+      <div class="card form-card">
+        <div class="card-header">
+          <h2>Nueva Respuesta</h2>
+          <span class="badge" id="badge-contador">0 registros</span>
+        </div>
+
+        <form id="formSolicitud" onsubmit="registrarSolicitud(event)">
+          <div class="form-grid">
+            <div class="field">
+              <label for="folio">Folio de Solicitud</label>
+              <input type="text" id="folio" placeholder="SOL-2024-001" required />
+            </div>
+            <div class="field">
+              <label for="fecha">Fecha de Atención</label>
+              <input type="date" id="fecha" required />
+            </div>
+            <div class="field">
+              <label for="cliente">Nombre del Cliente</label>
+              <input type="text" id="cliente" placeholder="Nombre completo" required />
+            </div>
+            <div class="field">
+              <label for="tipo">Tipo de Solicitud</label>
+              <select id="tipo" required>
+                <option value="">Seleccionar...</option>
+                <option value="Información">Información</option>
+                <option value="Soporte Técnico">Soporte Técnico</option>
+                <option value="Queja">Queja</option>
+                <option value="Devolución">Devolución</option>
+                <option value="Garantía">Garantía</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label for="descripcion">Descripción de la Solicitud</label>
+              <textarea id="descripcion" rows="3" placeholder="Detalle del cliente..." required></textarea>
+            </div>
+            <div class="field full">
+              <label for="respuesta">Respuesta Elaborada</label>
+              <textarea id="respuesta" rows="4" placeholder="Respuesta enviada al cliente..." required></textarea>
+            </div>
+            <div class="field">
+              <label for="estatus">Estatus</label>
+              <select id="estatus" required>
+                <option value="">Seleccionar...</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="En proceso">En proceso</option>
+                <option value="Resuelto">Resuelto</option>
+                <option value="Cerrado">Cerrado</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="agente">Agente Responsable</label>
+              <input type="text" id="agente" placeholder="Nombre del agente" required />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="reset" class="btn-secondary">Limpiar</button>
+            <button type="submit" class="btn-primary">Registrar Respuesta</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TABLA -->
+      <div class="card table-card">
+        <div class="card-header">
+          <h2>Historial de Solicitudes</h2>
+          <input type="text" id="buscador" placeholder="🔍 Buscar..." oninput="filtrarTabla()" class="search-input" />
+        </div>
+        <div class="table-wrapper">
+          <table id="tablaSolicitudes">
+            <thead>
+              <tr>
+                <th>Folio</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Tipo</th>
+                <th>Estatus</th>
+                <th>Agente</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+              <tr class="empty-row">
+                <td colspan="7">No hay solicitudes registradas.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SECCIÓN: REPORTE -->
+  <main id="section-reporte" class="section">
+    <div class="page-hero">
+      <div class="hero-eyebrow">Vista general</div>
+      <h1 class="hero-title">Reporte <em>Ejecutivo</em></h1>
+      <p class="hero-sub">Resumen consolidado de todas las solicitudes atendidas en el sistema.</p>
+    </div>
+    <div class="container">
+      <div class="stats-grid" id="statsGrid"></div>
+
+      <div class="card table-card">
+        <div class="card-header">
+          <h2>Detalle Completo</h2>
+          <button class="btn-primary" onclick="imprimirReporte()">⬇ Exportar / Imprimir</button>
+        </div>
+        <div class="table-wrapper">
+          <table id="tablaReporte">
+            <thead>
+              <tr>
+                <th>Folio</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Tipo</th>
+                <th>Descripción</th>
+                <th>Respuesta</th>
+                <th>Estatus</th>
+                <th>Agente</th>
+              </tr>
+            </thead>
+            <tbody id="cuerpoReporte">
+              <tr class="empty-row">
+                <td colspan="8">Sin datos para mostrar.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
